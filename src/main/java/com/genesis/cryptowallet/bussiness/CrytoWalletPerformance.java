@@ -71,7 +71,7 @@ public class CrytoWalletPerformance {
 
             comparePosition.add(assetCompared);
         }
-
+        threadPool.shutdown();
         return compareCurrentPosition(comparePosition);
 
     }
