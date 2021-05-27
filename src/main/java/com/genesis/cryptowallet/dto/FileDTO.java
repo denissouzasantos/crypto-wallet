@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @ToString
 public class FileDTO {
 
     private String symbol;
-    private double quantity;
-    private double price;
+    private BigDecimal quantity;
+    private BigDecimal price;
 }

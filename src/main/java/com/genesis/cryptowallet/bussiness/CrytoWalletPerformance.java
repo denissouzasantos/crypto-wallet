@@ -5,6 +5,8 @@ import com.genesis.cryptowallet.service.CryptoWalletService;
 import com.genesis.cryptowallet.util.ReadCsvFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -14,6 +16,10 @@ import java.util.concurrent.Executors;
 
 public class CrytoWalletPerformance {
 
+    private static final int ZERO = 0;
+    private static final BigDecimal DEFAULT_BD = new BigDecimal(0);
+    private static final int ONE_HUNDRED = 100;
+
     /**
      *
      * @param comparePosition
@@ -22,17 +28,18 @@ public class CrytoWalletPerformance {
     public ResponseDTO compareCurrentPosition(List<ComparePositionDTO> comparePosition) {
         ResponseDTO response = new ResponseDTO();
         String bestAsset = "";
-        double bestPerformance = 0.f;
+        BigDecimal bestPerformance = new BigDecimal(ZERO);
         String worstAsset = "";
-        double worstPerformance = 0.f;
-        double total = 0.f;
+        BigDecimal worstPerformance = new BigDecimal(ZERO);
+        BigDecimal total = new BigDecimal(ZERO);
+
         for (ComparePositionDTO compared : comparePosition) {
-            total += compared.getCurrentPosition();
-            if (bestPerformance == 0 || compared.getPriceCompared() > bestPerformance) {
+            total = total.add(compared.getCurrentPosition());
+            if (bestPerformance.compareTo(DEFAULT_BD) == ZERO || compared.getPriceCompared().compareTo(bestPerformance) > ZERO ) {
                 bestPerformance = compared.getPriceCompared();
                 bestAsset = compared.getSymbol();
             }
-            if (worstPerformance == 0 || compared.getPriceCompared() < worstPerformance) {
+            if (worstPerformance.compareTo(DEFAULT_BD) == ZERO || compared.getPriceCompared().compareTo(worstPerformance) < ZERO) {
                 worstPerformance = compared.getPriceCompared();
                 worstAsset = compared.getSymbol();
             }
@@ -66,8 +73,9 @@ public class CrytoWalletPerformance {
             AssetHistoryDTO assetHistory = completionService.take().get();
             ComparePositionDTO assetCompared = new ComparePositionDTO();
             assetCompared.setSymbol(line.getSymbol());
-            assetCompared.setCurrentPosition(line.getQuantity() * line.getPrice());
-            assetCompared.setPriceCompared(((assetHistory.getPriceUsd() / line.getPrice()) * 100) / 100);
+            assetCompared.setCurrentPosition(line.getQuantity().multiply(line.getPrice()) );
+            assetCompared.setPriceCompared(((assetHistory.getPriceUsd().divide(line.getPrice(), MathContext.DECIMAL128))
+                    .multiply(new BigDecimal(ONE_HUNDRED))).divide(new BigDecimal(ONE_HUNDRED), MathContext.DECIMAL128));
 
             comparePosition.add(assetCompared);
         }

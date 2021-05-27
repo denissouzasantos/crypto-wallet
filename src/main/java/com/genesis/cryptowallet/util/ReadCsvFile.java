@@ -59,8 +59,8 @@ public class ReadCsvFile {
             for (CSVRecord row: records) {
                 FileDTO line = new FileDTO();
                 line.setSymbol(row.get(0));
-                line.setQuantity(Float.valueOf(row.get(1)));
-                line.setPrice(Float.valueOf(row.get(2)));
+                line.setQuantity(new BigDecimal(row.get(1)));
+                line.setPrice(new BigDecimal(row.get(2)));
                 response.add(line);
             }
         } catch (IOException e) {

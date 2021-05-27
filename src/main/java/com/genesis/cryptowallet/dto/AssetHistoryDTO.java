@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 public class AssetHistoryDTO {
 
     @JsonProperty("priceUsd")
-    private double priceUsd;
+    private BigDecimal priceUsd;
 
     @JsonProperty("time")
     private String time;

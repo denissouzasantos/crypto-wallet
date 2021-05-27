@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 @Getter
@@ -12,23 +13,17 @@ import java.text.DecimalFormat;
 @ToString
 public class ResponseDTO {
 
-    private double total;
+    private BigDecimal total;
     private String bestAsset;
-    private double bestPerformance;
+    private BigDecimal bestPerformance;
     private String worstAsset;
-    private double worstPerformance;
+    private BigDecimal worstPerformance;
 
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-    public double getTotal() {
-        return Double.valueOf(df.format(total));
-    }
+    public BigDecimal getTotal() { return new BigDecimal(df.format(this.total)); }
 
-    public double getBestPerformance() {
-        return Double.valueOf(df.format(bestPerformance));
-    }
+    public BigDecimal getBestPerformance() { return new BigDecimal(df.format(this.bestPerformance)); }
 
-    public double getWorstPerformance() {
-        return Double.valueOf(df.format(worstPerformance));
-    }
+    public BigDecimal getWorstPerformance() { return new BigDecimal(df.format(this.worstPerformance)); }
 }
